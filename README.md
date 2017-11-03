@@ -21,6 +21,11 @@ I (1225754) BMP180 I2C Read: Pressure : 99839 Pa, Altitude 123.8 m, Temperature 
 ...
 ```
 
+## Build Status
+
+[![Build Status](https://travis-ci.org/krzychb/bmp180-tests.svg?branch=master)](https://travis-ci.org/krzychb/bmp180-tests)
+
+
 ## Wiring of sensors
 
 | Interface | SCL | SDA | Component Name |
