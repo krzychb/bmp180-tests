@@ -1,8 +1,8 @@
 # bmp180-tests
 
-Read [BMP180](https://www.bosch-sensortec.com/bst/products/all_products/bmp180) Barometric Pressure Sensor with [ESP32](https://espressif.com/en/products/hardware/esp32/overview), [esp-idf](https://github.com/espressif/esp-idf) and:
+Read [BMP180](https://www.bosch-sensortec.com/bst/products/all_products/bmp180) Barometric Pressure Sensor with [ESP32](https://espressif.com/en/products/hardware/esp32/overview), [esp-idf](https://github.com/espressif/esp-idf) and using:
 
-* hardware I2C peripheral on board of ESP32
+* I2C h/w controller on board of ESP32
 * software bit banging
 
 ![alt text](pictures/esp32-and-two-bmp180.jpg "ESP32 and two BMP180 sensors")
@@ -26,7 +26,7 @@ I (1225754) BMP180 I2C Read: Pressure : 99839 Pa, Altitude 123.8 m, Temperature 
 | Interface | SCL | SDA | Component Name |
 | :--- | :---: | :---: | :---: |
 | I2C | GPIO23 | GPIO22 | bmp180 |
-| TWI | GPIO23 | GPIO22 | bmp180_twi |
+| TWI | GPIO27 | GPIO25 | bmp180_twi |
 
 
 ## Contribute
