@@ -209,17 +209,9 @@ esp_err_t bmp180_twi_init(int pin_sda, int pin_scl)
         mc = bmp180_read_int16(BMP180_CAL_MC);
         md = bmp180_read_int16(BMP180_CAL_MD);
 
-        ESP_LOGI(TAG, "BMP180_CAL_AC1: 0x%02x", ac1);
-        ESP_LOGI(TAG, "BMP180_CAL_AC2: 0x%02x", ac2);
-        ESP_LOGI(TAG, "BMP180_CAL_AC3: 0x%02x", ac3);
-        ESP_LOGI(TAG, "BMP180_CAL_AC4: 0x%02x", ac4);
-        ESP_LOGI(TAG, "BMP180_CAL_AC5: 0x%02x", ac5);
-        ESP_LOGI(TAG, "BMP180_CAL_AC6: 0x%02x", ac6);
-        ESP_LOGI(TAG, "BMP180_CAL_B1: 0x%02x", b1);
-        ESP_LOGI(TAG, "BMP180_CAL_B2: 0x%02x", b2);
-        ESP_LOGI(TAG, "BMP180_CAL_MB: 0x%02x", mb);
-        ESP_LOGI(TAG, "BMP180_CAL_MC: 0x%02x", mc);
-        ESP_LOGI(TAG, "BMP180_CAL_MD: 0x%02x", md);
+        ESP_LOGI(TAG, "AC1: %d, AC2: %d, AC3: %d, AC4: %d, AC5: %d, AC6: %d", ac1, ac2, ac3, ac4, ac5, ac6);
+        ESP_LOGI(TAG, "B1: %d, B2: %d, MB: %d, MC: %d, MD: %d", b1, b2, mb, mc, md);
+
         return ESP_OK;
     } else {
         ESP_LOGE(TAG, "Sensor not found at 0x%02x", BMP180_ADDRESS);

@@ -161,7 +161,11 @@ static esp_err_t bmp180_read_uncompensated_temperature(int16_t* temp)
 {
     esp_err_t err = bmp180_write_reg(I2C_NUM_0, BMP180_CONTROL, BMP180_READ_TEMP_CMD);
     if (err == ESP_OK) {
-        vTaskDelay(5 / portTICK_RATE_MS);
+        TickType_t xDelay = 5 / portTICK_PERIOD_MS;
+        if (xDelay == 0) {
+            xDelay = 1;
+        }
+        vTaskDelay(xDelay);
         err = bmp180_read_int16(I2C_NUM_0, BMP180_DATA_TO_READ, temp);
     }
     if (err != ESP_OK) {
@@ -191,9 +195,11 @@ static uint32_t bmp180_read_uncompensated_pressure(uint32_t* up)
 {
     esp_err_t err = bmp180_write_reg(I2C_NUM_0, BMP180_CONTROL, BMP180_READ_PRESSURE_CMD + (oversampling << 6));
     if (err == ESP_OK) {
-        uint8_t wait_time_ms = 2 + (3 << oversampling);
-        vTaskDelay(wait_time_ms / portTICK_RATE_MS);
-
+        TickType_t xDelay = (2 + (3 << oversampling)) / portTICK_PERIOD_MS;
+        if (xDelay == 0) {
+            xDelay = 1;
+        }
+        vTaskDelay(xDelay);
         err = bmp180_read_uint32(I2C_NUM_0, BMP180_DATA_TO_READ, up);
         if (err == ESP_OK) {
             *up >>= (8 - oversampling);
@@ -310,17 +316,25 @@ esp_err_t bmp180_init(int pin_sda, int pin_scl)
     }
 
     ESP_LOGI(TAG, "BMP180 sensor found at 0x%02x", BMP180_ADDRESS);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_AC1, &ac1);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_AC2, &ac2);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_AC3, &ac3);
-    bmp180_read_uint16(I2C_NUM_0, BMP180_CAL_AC4, &ac4);
-    bmp180_read_uint16(I2C_NUM_0, BMP180_CAL_AC5, &ac5);
-    bmp180_read_uint16(I2C_NUM_0, BMP180_CAL_AC6, &ac6);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_B1, &b1);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_B2, &b2);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_MB, &mb);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_MC, &mc);
-    bmp180_read_int16(I2C_NUM_0, BMP180_CAL_MD, &md);
+    err  = bmp180_read_int16(I2C_NUM_0, BMP180_CAL_AC1, &ac1);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_AC2, &ac2);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_AC3, &ac3);
+    err |= bmp180_read_uint16(I2C_NUM_0, BMP180_CAL_AC4, &ac4);
+    err |= bmp180_read_uint16(I2C_NUM_0, BMP180_CAL_AC5, &ac5);
+    err |= bmp180_read_uint16(I2C_NUM_0, BMP180_CAL_AC6, &ac6);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_B1, &b1);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_B2, &b2);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_MB, &mb);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_MC, &mc);
+    err |= bmp180_read_int16(I2C_NUM_0, BMP180_CAL_MD, &md);
+
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "BMP180 sensor calibration read failure, err = %d", err);
+        return ESP_ERR_BMP180_CALIBRATION_FAILURE;
+    }
+
+    ESP_LOGI(TAG, "AC1: %d, AC2: %d, AC3: %d, AC4: %d, AC5: %d, AC6: %d", ac1, ac2, ac3, ac4, ac5, ac6);
+    ESP_LOGI(TAG, "B1: %d, B2: %d, MB: %d, MC: %d, MD: %d", b1, b2, mb, mc, md);
 
     return ESP_OK;
 }

@@ -18,9 +18,10 @@
 extern "C" {
 #endif
 
-#define ESP_ERR_BMP180_BASE            0x30000
-#define ESP_ERR_TOO_SLOW_TICK_RATE     (ESP_ERR_BMP180_BASE + 1)
-#define ESP_ERR_BMP180_NOT_DETECTED    (ESP_ERR_BMP180_BASE + 2)
+#define ESP_ERR_BMP180_BASE                  0x30000
+#define ESP_ERR_TOO_SLOW_TICK_RATE           (ESP_ERR_BMP180_BASE + 1)
+#define ESP_ERR_BMP180_NOT_DETECTED          (ESP_ERR_BMP180_BASE + 2)
+#define ESP_ERR_BMP180_CALIBRATION_FAILURE   (ESP_ERR_BMP180_BASE + 3)
 
 esp_err_t bmp180_twi_init(int pin_sda, int pin_scl);
 float bmp180_twi_read_temperature(void);
